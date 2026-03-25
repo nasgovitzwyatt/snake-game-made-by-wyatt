@@ -1,0 +1,68 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+#scoreContainer {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+#scoreBoard, #highScoreBoard {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 8px 20px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#scoreBoard {
+  color: #2e7d32; /* Green for current score */
+}
+
+#highScoreBoard {
+  color: #f39c12; /* Gold for high score */
+}
+
+canvas {
+  border: 5px solid #333;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+#restartBtn {
+  margin-top: 25px;
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px #2e7d32;
+  transition: all 0.1s;
+}
+
+#restartBtn:hover {
+  background-color: #45a049;
+}
+
+#restartBtn:active {
+  box-shadow: 0 0 #2e7d32;
+  transform: translateY(4px);
+}

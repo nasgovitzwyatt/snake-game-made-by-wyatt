@@ -7,35 +7,43 @@ const restartBtn = document.getElementById("restartBtn");
 const box = 20;
 let snake, food, direction, nextDirection, score, gameInterval;
 
-// Load high score and name from your computer's memory
+// Load High Score
 let highScore = localStorage.getItem("snakeHighScore") || 0;
 let highScoreName = localStorage.getItem("snakeHighScoreName") || "None";
 highElement.innerText = `High Score: ${highScore} (${highScoreName})`;
 
 function initGame() {
     snake = [{ x: 9 * box, y: 10 * box }];
-    food = {
-        x: Math.floor(Math.random() * 20) * box,
-        y: Math.floor(Math.random() * 20) * box,
-    };
+    generateFood();
     direction = null;
     nextDirection = null;
     score = 0;
     scoreElement.innerText = "Score: 0";
-    
     if (gameInterval) clearInterval(gameInterval);
     gameInterval = setInterval(drawGame, 100);
 }
 
+function generateFood() {
+    food = {
+        x: Math.floor(Math.random() * 19) * box,
+        y: Math.floor(Math.random() * 19) * box,
+    };
+}
+
+// Key listeners
 document.addEventListener("keydown", (e) => {
-    const key = e.key;
-    if (key === "ArrowUp" && direction !== "DOWN") nextDirection = "UP";
-    else if (key === "ArrowDown" && direction !== "UP") nextDirection = "DOWN";
-    else if (key === "ArrowLeft" && direction !== "RIGHT") nextDirection = "LEFT";
-    else if (key === "ArrowRight" && direction !== "LEFT") nextDirection = "RIGHT";
+    if (e.key === "ArrowUp" && direction !== "DOWN") nextDirection = "UP";
+    if (e.key === "ArrowDown" && direction !== "UP") nextDirection = "DOWN";
+    if (e.key === "ArrowLeft" && direction !== "RIGHT") nextDirection = "LEFT";
+    if (e.key === "ArrowRight" && direction !== "LEFT") nextDirection = "RIGHT";
 });
 
-restartBtn.addEventListener("click", initGame);
+// Button listeners for mobile
+document.getElementById("upBtn").onclick = () => { if(direction !== "DOWN") nextDirection = "UP"; };
+document.getElementById("downBtn").onclick = () => { if(direction !== "UP") nextDirection = "DOWN"; };
+document.getElementById("leftBtn").onclick = () => { if(direction !== "RIGHT") nextDirection = "LEFT"; };
+document.getElementById("rightBtn").onclick = () => { if(direction !== "LEFT") nextDirection = "RIGHT"; };
+restartBtn.onclick = initGame;
 
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -51,8 +59,7 @@ function drawGame() {
 
     if (direction) {
         if (headX < 0 || headY < 0 || headX >= canvas.width || headY >= canvas.height || 
-            snake.some((seg, index) => index !== 0 && seg.x === headX && seg.y === headY)) {
-            
+            snake.some((seg, i) => i !== 0 && seg.x === headX && seg.y === headY)) {
             clearInterval(gameInterval);
             checkHighScore();
             return;
@@ -64,21 +71,16 @@ function drawGame() {
     if (headX === food.x && headY === food.y) {
         score++;
         scoreElement.innerText = "Score: " + score;
-        food = {
-            x: Math.floor(Math.random() * 20) * box,
-            y: Math.floor(Math.random() * 20) * box,
-        };
+        generateFood();
     } else {
         if (direction) snake.pop();
     }
 
     if (direction) snake.unshift(newHead);
 
-    // Draw Food
     ctx.fillStyle = "red";
     ctx.fillRect(food.x, food.y, box, box);
 
-    // Draw Snake
     snake.forEach((segment) => {
         ctx.fillStyle = "green";
         ctx.fillRect(segment.x, segment.y, box, box);
@@ -92,13 +94,9 @@ function checkHighScore() {
         const playerName = prompt("NEW HIGH SCORE! Enter your name:");
         highScore = score;
         highScoreName = playerName || "Anonymous";
-        
-        // Save to computer memory
         localStorage.setItem("snakeHighScore", highScore);
         localStorage.setItem("snakeHighScoreName", highScoreName);
-        
         highElement.innerText = `High Score: ${highScore} (${highScoreName})`;
-        alert(`Congrats ${highScoreName}! You set a new record.`);
     } else {
         alert("Game Over! Score: " + score);
     }
